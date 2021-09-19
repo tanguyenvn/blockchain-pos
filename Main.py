@@ -9,4 +9,8 @@ if __name__ == '__main__':
     amount = 1
     type = 'TRANSFER'
     transaction = Transaction(sender, receiver, amount, type)
-    print(transaction.toJson())
+
+    # sign transaction
+    wallet = Wallet()
+    signature = wallet.sign(transaction.toJson())
+    print(signature)
