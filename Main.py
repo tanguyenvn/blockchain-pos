@@ -14,3 +14,10 @@ if __name__ == '__main__':
     wallet = Wallet()
     signature = wallet.sign(transaction.toJson())
     print(signature)
+
+    # attach signature to transaction
+    transaction.sign(signature)
+
+    # validate signature of transaction
+    signatureValid = Wallet.isSignatureValid(transaction.getPayload(), signature, wallet.getPubKeyString())
+    print(signatureValid)

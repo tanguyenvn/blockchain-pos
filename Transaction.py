@@ -14,6 +14,12 @@ class Transaction():
     
     def toJson(self):
         return self.__dict__
-   
+    
+    def getPayload(self):
+        payload = copy.deepcopy(self.toJson())
+        payload['signature'] = ''
+        return payload
+        
+
     def sign(self, signature):
         self.signature = signature
