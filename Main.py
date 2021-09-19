@@ -1,5 +1,5 @@
-from Wallet import Wallet
 from Transaction import Transaction
+from TransactionPool import TransactionPool
 from Wallet import Wallet
 
 if __name__ == '__main__':
@@ -21,3 +21,9 @@ if __name__ == '__main__':
     fraudulentWallet = Wallet()
     isSignatureValid = wallet.isSignatureValid(transaction.getPayload(), transaction.signature, fraudulentWallet.getPubKeyString())
     print(isSignatureValid)
+
+    # transaction pool
+    transactionPool = TransactionPool()
+    transactionPool.addTransaction(transaction)
+    print(transactionPool.transactions)
+

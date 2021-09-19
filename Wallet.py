@@ -5,7 +5,7 @@ from Transaction import Transaction
 from Utils import Utils
 
 
-class Wallet():
+class Wallet:
     def __init__(self):
         self.keyPair = RSA.generate(2048)
 

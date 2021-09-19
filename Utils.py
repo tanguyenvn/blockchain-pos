@@ -1,7 +1,7 @@
 from Crypto.Hash import SHA256
 import json
 
-class Utils():
+class Utils:
     @staticmethod
     def hash(data):
         dataString = json.dumps(data)
