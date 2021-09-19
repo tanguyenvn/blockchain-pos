@@ -30,3 +30,9 @@ class Wallet():
     def getPubKeyString(self):
         pubKeyString = self.keyPair.publickey().exportKey('PEM').decode('utf-8')
         return pubKeyString
+
+    def createTransaction(self, receiverPubKey, amount, type):
+        transaction = Transaction(self.getPubKeyString(), receiverPubKey, amount, type)
+        signature = self.sign(transaction.getPayload())
+        transaction.sign(signature)
+        return transaction

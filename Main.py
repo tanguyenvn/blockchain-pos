@@ -3,21 +3,21 @@ from Transaction import Transaction
 from Wallet import Wallet
 
 if __name__ == '__main__':
-    # prepare a transaction
-    sender = 'sender'
+    # create a wallet
+    wallet = Wallet()
+
+    # create a signed transaction
     receiver = 'receiver'
     amount = 1
     type = 'TRANSFER'
-    transaction = Transaction(sender, receiver, amount, type)
+    transaction = wallet.createTransaction(receiver, amount, type)
+    print(transaction.toJson())
 
-    # sign transaction
-    wallet = Wallet()
-    signature = wallet.sign(transaction.toJson())
-    print(signature)
+    # validate transaction's signature
+    isSignatureValid = wallet.isSignatureValid(transaction.getPayload(), transaction.signature, wallet.getPubKeyString())
+    print(isSignatureValid)
 
-    # attach signature to transaction
-    transaction.sign(signature)
-
-    # validate signature of transaction
-    signatureValid = Wallet.isSignatureValid(transaction.getPayload(), signature, wallet.getPubKeyString())
-    print(signatureValid)
+    # create a fraudulent wallet
+    fraudulentWallet = Wallet()
+    isSignatureValid = wallet.isSignatureValid(transaction.getPayload(), transaction.signature, fraudulentWallet.getPubKeyString())
+    print(isSignatureValid)
