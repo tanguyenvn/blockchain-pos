@@ -2,6 +2,8 @@ from Block import Block
 from Transaction import Transaction
 from TransactionPool import TransactionPool
 from Wallet import Wallet
+from Blockchain import Blockchain
+from Utils import Utils
 
 import pprint
 
@@ -31,12 +33,30 @@ if __name__ == '__main__':
         transactionPool.addTransaction(transaction)
     # print(transactionPool.transactions)
 
+    # create a blockchain
+    blockchain = Blockchain()
+    # pprint.pprint(blockchain.toJson())
+
     # create a block
-    block = wallet.createBlock(transactionPool.transactions, 'lastHash', 1)
-    pprint.pprint(block.toJson())
+    lastBlock = blockchain.blocks[-1]
+    lastHash = Utils.hash(lastBlock.payload()).hexdigest()
+    blockCount = lastBlock.blockCount + 1
+    block = wallet.createBlock(transactionPool.transactions, lastHash, blockCount)
+    # pprint.pprint(block.toJson())
 
     # validate block's signature
     isBlockSignatureValid = Wallet.isSignatureValid(block.payload(), block.signature, wallet.getPubKeyString())
-    print("isBlockSignatureValid", isBlockSignatureValid)
+    # print("isBlockSignatureValid", isBlockSignatureValid)
     isBlockSignatureValid = Wallet.isSignatureValid(block.payload(), block.signature, fraudulentWallet.getPubKeyString())
-    print("isBlockSignatureValid", isBlockSignatureValid)
+    # print("isBlockSignatureValid", isBlockSignatureValid)
+
+    # validate if block is valid
+    blockCountValid = blockchain.blockCountValid(block)
+    lastBlockHashValid = blockchain.lastBlockHashValid(block)
+    print('blockCountValid', blockCountValid)
+    print('lastBlockHashValid', lastBlockHashValid)
+
+    # add a block to blockchain
+    if blockCountValid and lastBlockHashValid:
+        blockchain.addBlock(block)
+    pprint.pprint(blockchain.toJson())
