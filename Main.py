@@ -7,6 +7,7 @@ from Transaction import Transaction
 from TransactionPool import TransactionPool
 from Utils import Utils
 from Wallet import Wallet
+from Node import Node
 
 
 def testCreateTransaction():
@@ -127,10 +128,17 @@ def testAccountModelInBlockchain():
 
     pprint.pprint(blockchain.toJson())
 
+def testNode():
+    node = Node()
+    print(node.blockchain)
+    print(node.transactionPool)
+    print(node.wallet)
+
 if __name__ == '__main__':
     # testCreateTransaction()
     # testTransactionPool()
     # testCreateBlock()
     # testAddBlockToBlockchain()
     # testAccountModel()
-    testAccountModelInBlockchain()
+    # testAccountModelInBlockchain()
+    testNode()
