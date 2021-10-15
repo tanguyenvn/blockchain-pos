@@ -1,5 +1,5 @@
 <h2> Introduction </h2>
-This is a tutorial based on the Udemy course "Build your own Proof of Stake Blockchain"
+This is an application of Proof of Stake Blockchain based on the Udemy course
 
 ```
 - Advantages of Proof of Stake over Proof of Work
@@ -19,4 +19,9 @@ pip3 install -U PyCryptodome
 - run 
 ```
 python3 Main.py
+```
+
+- start P2P nodes
+```
+python3 Main.py localhost 10001
 ```

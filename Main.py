@@ -1,13 +1,14 @@
 import pprint
+import sys
 
 from AccountModel import AccountModel
 from Block import Block
 from Blockchain import Blockchain
+from Node import Node
 from Transaction import Transaction
 from TransactionPool import TransactionPool
 from Utils import Utils
 from Wallet import Wallet
-from Node import Node
 
 
 def testCreateTransaction():
@@ -128,11 +129,29 @@ def testAccountModelInBlockchain():
 
     pprint.pprint(blockchain.toJson())
 
-def testNode():
-    node = Node()
-    print(node.blockchain)
-    print(node.transactionPool)
-    print(node.wallet)
+# start a node using `python3 Main.py localhost 10001`
+def testP2PNode():
+    ip = sys.argv[1]
+    port = int(sys.argv[2])
+    node = Node(ip, port)
+
+    node.startP2P()
+    
+def testP2PCommunication():
+    ip = sys.argv[1]
+    port = int(sys.argv[2])
+    node = Node(ip, port)
+
+    node.startP2P()
+
+    # start a node with port 10001 using `python3 Main.py localhost 10001`
+    # start a second node with port 10002 using `python3 Main.py localhost 10002`
+
+    # node 2 connects to node 1
+    if port == 10002:
+        # this block of code is processing inside node 10002
+        node.p2p.connect_with_node('localhost', 10001)
+    
 
 if __name__ == '__main__':
     # testCreateTransaction()
@@ -141,4 +160,5 @@ if __name__ == '__main__':
     # testAddBlockToBlockchain()
     # testAccountModel()
     # testAccountModelInBlockchain()
-    testNode()
+    testP2PNode()
+    # testP2PCommunication()
