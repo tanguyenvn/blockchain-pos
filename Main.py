@@ -158,6 +158,7 @@ def testAPI():
     apiPort = int(sys.argv[3])
     node = Node(ip, p2pPort)
 
+    node.startP2P()
     node.startAPI(apiPort)
 
 if __name__ == '__main__':

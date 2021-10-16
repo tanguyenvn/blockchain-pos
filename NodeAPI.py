@@ -2,6 +2,7 @@ from flask import Flask
 from flask.globals import request
 from flask.json import jsonify
 from flask_classful import FlaskView, route
+
 from Utils import Utils
 
 node = None

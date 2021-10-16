@@ -4,6 +4,7 @@ from p2pnetwork.node import Node
 from PeerDiscoveryHandler import PeerDiscoveryHandler
 from SocketConnector import SocketConnector
 from Utils import Utils
+from Message import Message
 
 
 # extends p2pnetwork.Node
@@ -19,7 +20,8 @@ class SocketCommunication(Node):
             self.connect_with_node('localhost', 10001)
 
     # start a p2p node
-    def startSocketCommunication(self):
+    def startSocketCommunication(self, node):
+        self.node = node
         self.start()
         # also start discovery
         self.peerDiscoveryHandler.start()
@@ -36,9 +38,14 @@ class SocketCommunication(Node):
 
     # a callback that is invoked when a node send us a message
     def node_message(self, connected_node, message):
-        message = Utils.decode(json.dumps(message))
+        message: Message = Utils.decode(json.dumps(message))
+        # handle discovery message
         if message.messageType == 'DISCOVERY':
             self.peerDiscoveryHandler.handleMessage(message)
+        # handle transaction message
+        elif message.messageType == 'TRANSACTION':
+            transaction = message.data
+            self.node.handleTransaction(transaction)
 
     # send a message to a peer
     def send(self, receiver, message):

@@ -3,6 +3,9 @@ from SocketCommunication import SocketCommunication
 from TransactionPool import TransactionPool
 from Wallet import Wallet
 from NodeAPI import NodeAPI
+from Message import Message
+from Utils import Utils
+
 
 
 class Node:
@@ -18,7 +21,7 @@ class Node:
     # Start a P2P node
     def startP2P(self):
         self.p2p = SocketCommunication(self.ip, self.port)
-        self.p2p.startSocketCommunication()
+        self.p2p.startSocketCommunication(self)
 
     # Start a webserver
     def startAPI(self, apiPort):
@@ -34,3 +37,6 @@ class Node:
         transactionExists = self.transactionPool.transactionExists(transaction)
         if not transactionExists and isSignatureValid:
             self.transactionPool.addTransaction(transaction)
+            message = Message(self.p2p.socketConnector, 'TRANSACTION', transaction)
+            encodedMessage = Utils.encode(message)
+            self.p2p.broadcast(encodedMessage)
