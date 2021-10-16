@@ -152,6 +152,13 @@ def testP2PCommunication():
         # this block of code is processing inside node 10002
         node.p2p.connect_with_node('localhost', 10001)
     
+def testAPI():
+    ip = sys.argv[1]
+    p2pPort = int(sys.argv[2])
+    apiPort = int(sys.argv[3])
+    node = Node(ip, p2pPort)
+
+    node.startAPI(apiPort)
 
 if __name__ == '__main__':
     # testCreateTransaction()
@@ -160,5 +167,6 @@ if __name__ == '__main__':
     # testAddBlockToBlockchain()
     # testAccountModel()
     # testAccountModelInBlockchain()
-    testP2PNode()
+    # testP2PNode()
     # testP2PCommunication()
+    testAPI()

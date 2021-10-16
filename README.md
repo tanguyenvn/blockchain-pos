@@ -25,3 +25,17 @@ python3 Main.py
 ```
 python3 Main.py localhost 10001
 ```
+
+- Start API server
+```
+python3 Main.py localhost 10001 5001
+```
+- Query Blockchain and Transaction Pool status via API 
+```
+http://localhost:5001/blockchain
+http://localhost:5001/transactionPool
+```
+- Create and submit a transaction via API
+```
+python3 TestCreateTransaction.py
+```
