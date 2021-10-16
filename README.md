@@ -1,14 +1,15 @@
-<h2> Introduction </h2>
-This is an application of Proof of Stake Blockchain based on the Udemy course
+# Proof-of-Stake Blockchain Application
+
+## Introduction
+This Python application was built based on a Udemy course
 
 ```
-- Advantages of Proof of Stake over Proof of Work
 - Implementing a Decentralized P2P Network
 - Finding Consensus in a Network of mutually untrusted Nodes
 - REST-API to communicate with your own Blockchain
 ```
 
-<h2> Getting started</h2>
+## Getting started
 
 - Install requirements.txt
 - In case of error, run
