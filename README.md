@@ -17,10 +17,6 @@ This Python application was built based on a Udemy course
 pip3 uninstall PyCrypto
 pip3 install -U PyCryptodome
 ```
-- run 
-```
-python3 Main.py
-```
 
 - start P2P nodes
 ```
@@ -36,6 +32,8 @@ python3 Main.py localhost 10001 5001
 http://localhost:5001/blockchain
 http://localhost:5001/transactionPool
 ```
+![Blockchain status](./assets/blockchain.png?raw=true "Blockchain status")
+
 - Create and submit a transaction via API
 ```
 python3 TestCreateTransaction.py

@@ -1,3 +1,6 @@
+from Crypto import Signature
+
+from Block import Block
 from Blockchain import Blockchain
 from Message import Message
 from NodeAPI import NodeAPI
@@ -35,8 +38,10 @@ class Node:
         signature = transaction.signature
         signerPubKey = transaction.senderPubKey
         isSignatureValid = Wallet.isSignatureValid(data, signature, signerPubKey)
-        transactionExists = self.transactionPool.transactionExists(transaction)
-        if not transactionExists and isSignatureValid:
+        transactionExistsInPool = self.transactionPool.transactionExists(transaction)
+        transactionExistsInBlockchain = self.blockchain.transactionExists(transaction)
+
+        if not transactionExistsInPool and not transactionExistsInBlockchain and isSignatureValid:
             self.transactionPool.addTransaction(transaction)
             message = Message(self.p2p.socketConnector, 'TRANSACTION', transaction)
             encodedMessage = Utils.encode(message)
@@ -45,10 +50,36 @@ class Node:
             if self.transactionPool.isForgerRequired():
                 self.forge()
 
+    def handleBlock(self, block: Block):
+        isBlockCountValid = self.blockchain.blockCountValid(block)
+        isLastBlockHashValid = self.blockchain.lastBlockHashValid(block)
+        isForgerValid = self.blockchain.forgerValid(block)
+        areTransactionsValid = self.blockchain.transactionsValid(block.transactions)
+
+        forger = block.forger
+        signature = block.signature
+        isSignatureValid = self.wallet.isSignatureValid(block.payload(), signature, forger)
+
+        if isBlockCountValid and isLastBlockHashValid and isForgerValid and areTransactionsValid and isSignatureValid:
+            # add to blockchain
+            self.blockchain.addBlock(block)
+            self.transactionPool.removeFromPool(block.transactions)
+
+            # broadcast to other peers
+            message = Message(self.p2p.socketConnector, 'BLOCK', block)
+            self.p2p.broadcast(Utils.encode(message))
+
     # create a new block (PoS uses the terms forge, mint while PoW use the term mine)
     def forge(self):
         forger = self.blockchain.findNextForger()
         if forger == self.wallet.getPubKeyString():
             print('I am the next forger')
+            # forge a block
+            block = self.blockchain.createBlock(self.transactionPool.transactions, self.wallet)
+            self.transactionPool.removeFromPool(block.transactions)
+            
+            # broadcast
+            message = Message(self.p2p.socketConnector, 'BLOCK', block)
+            self.p2p.broadcast(Utils.encode(message))
         else:
             print('I am not the next forger')

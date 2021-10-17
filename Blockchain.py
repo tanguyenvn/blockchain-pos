@@ -5,6 +5,7 @@ from Block import Block
 from Transaction import Transaction
 from Utils import Utils
 from ProofOfStake import ProofOfStake
+from Wallet import Wallet
 
 
 class Blockchain:
@@ -76,4 +77,31 @@ class Blockchain:
     def findNextForger(self):
         lastBlockHash = Utils.hash(self.blocks[-1].payload()).hexdigest()
         nextForger = self.pos.getForger(lastBlockHash)
-        return nextForger    
+        return nextForger 
+
+    # create a block and add to blockchain
+    def createBlock(self, pooledTransactions, forgerWallet: Wallet):
+        coveredTransactions = self.getCoveredTransactions(pooledTransactions)
+        self.executeTransactions(coveredTransactions)
+        newBlock = forgerWallet.createBlock(coveredTransactions, Utils.hash(self.blocks[-1].payload()).hexdigest(), len(self.blocks))
+        self.blocks.append(newBlock)
+        return newBlock
+
+    # check if tx already exists in blockchain
+    def transactionExists(self, transaction):
+        for block in self.blocks:
+            for tx in block.transactions:
+                if transaction.equals(tx):
+                    return True
+        return False
+
+    # check if the supposed forger of the block is valid
+    def forgerValid(self, block: Block):
+        forgerPubKey = self.pos.getForger(block.lastHash)
+        proposedBlockForger = block.forger
+        return forgerPubKey == proposedBlockForger
+
+    # check if to-be-added transactions are valid
+    def transactionsValid(self, proposingTransactions):
+        coveredTransactions = self.getCoveredTransactions(proposingTransactions)
+        return len(proposingTransactions) == len(coveredTransactions)

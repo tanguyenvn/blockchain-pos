@@ -46,6 +46,10 @@ class SocketCommunication(Node):
         elif message.messageType == 'TRANSACTION':
             transaction = message.data
             self.node.handleTransaction(transaction)
+        # handle block message
+        elif message.messageType == 'BLOCK':
+            block = message.data
+            self.node.handleBlock(block)
 
     # send a message to a peer
     def send(self, receiver, message):
