@@ -12,6 +12,7 @@ This is a prototype of Blockchain using Proof-of-Stake Consensus mechanism. It w
 ## Suggested improvements
 - Currently, all data is stored in process' memory. We can improve it by storing data in a persistent storage e.g. LevelDB
 - Shorten the addresses of sender and receiver. So far, we're using public keys
+- What if a staker is selected to be the next forger but is offline?
 
 ## Getting started
 
