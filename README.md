@@ -3,11 +3,16 @@
 ## Introduction
 This is a prototype of Blockchain using Proof-of-Stake Consensus mechanism. It was written in Python and actually based on a Udemy course.
 
-```
-- Implementing a Decentralized P2P Network
-- Finding Consensus in a Network of mutually untrusted Nodes
-- REST-API to communicate with your own Blockchain
-```
+- Cryptographic Signatures
+- RSA Public Key Cryptography
+- SHA-256 Hashes
+- Transactions - The purpose of Transactions in a Blockchain Systems.
+- Blocks - The most essential building block.
+- Blockchains - Whats going on behind the scenes.
+- P2P Network - How to find and communicate with other Nodes.
+- REST API - How to communicate with your Blockchain System.
+- Proof-of-Stake: Finding Consensus in a Network of mutually untrusted Nodes
+- Threading & Parallelization
 
 ## Suggested improvements
 - Currently, all data is stored in process' memory. We can improve it by storing data in a persistent storage e.g. LevelDB
