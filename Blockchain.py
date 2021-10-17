@@ -64,8 +64,13 @@ class Blockchain:
         sender = transaction.senderPubKey
         receiver = transaction.receiverPubKey
         amount = transaction.amount
-        self.accountModel.updateBalance(sender, -amount)
-        self.accountModel.updateBalance(receiver, amount)
+        if transaction.type == 'STAKE':
+            if sender == receiver:
+                self.pos.update(sender, amount)
+                self.accountModel.updateBalance(sender, -amount)
+        else:
+            self.accountModel.updateBalance(sender, -amount)
+            self.accountModel.updateBalance(receiver, amount)
 
     # find the next forger
     def findNextForger(self):

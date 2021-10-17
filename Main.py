@@ -156,7 +156,10 @@ def testAPI():
     ip = sys.argv[1]
     p2pPort = int(sys.argv[2])
     apiPort = int(sys.argv[3])
-    node = Node(ip, p2pPort)
+    keyFile = None
+    if len(sys.argv) > 4:
+        keyFile = sys.argv[4]
+    node = Node(ip, p2pPort, keyFile)
 
     node.startP2P()
     node.startAPI(apiPort)

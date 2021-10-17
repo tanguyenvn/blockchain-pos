@@ -8,14 +8,16 @@ from Wallet import Wallet
 
 
 class Node:
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, keyFile=None):
         self.p2p = None
         self.ip = ip
         self.port = port
 
         self.transactionPool = TransactionPool()
-        self.wallet = Wallet()  # to sign block
         self.blockchain = Blockchain()
+        self.wallet = Wallet()  # to sign block
+        if keyFile is not None:
+            self.wallet.fromKey(keyFile)
 
     # Start a P2P node
     def startP2P(self):
@@ -45,7 +47,7 @@ class Node:
 
     # create a new block (PoS uses the terms forge, mint while PoW use the term mine)
     def forge(self):
-        forger = self.blockchain.nextForger()
+        forger = self.blockchain.findNextForger()
         if forger == self.wallet.getPubKeyString():
             print('I am the next forger')
         else:

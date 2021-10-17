@@ -4,6 +4,12 @@ from Utils import Utils
 class ProofOfStake():
     def __init__(self):
         self.stakers = {}
+        self.setGenesisNodeStaker()
+    
+    # init genesis staker
+    def setGenesisNodeStaker(self):
+        genesisPubKey = open('keys/genesisPublicKey.pem', 'r').read()
+        self.stakers[genesisPubKey] = 1
 
     # update stake of a staker
     def update(self, pubKeyString, stake):
