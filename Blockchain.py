@@ -4,6 +4,7 @@ from AccountModel import AccountModel
 from Block import Block
 from Transaction import Transaction
 from Utils import Utils
+from ProofOfStake import ProofOfStake
 
 
 class Blockchain:
@@ -11,6 +12,7 @@ class Blockchain:
         # add genesis block
         self.blocks = [Block.genesis()]
         self.accountModel = AccountModel()
+        self.pos = ProofOfStake()
 
     # add a block to blockchain
     def addBlock(self, block: Block):
@@ -64,3 +66,9 @@ class Blockchain:
         amount = transaction.amount
         self.accountModel.updateBalance(sender, -amount)
         self.accountModel.updateBalance(receiver, amount)
+
+    # find the next forger
+    def findNextForger(self):
+        lastBlockHash = Utils.hash(self.blocks[-1].payload()).hexdigest()
+        nextForger = self.pos.getForger(lastBlockHash)
+        return nextForger    

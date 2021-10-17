@@ -1,11 +1,10 @@
 from Blockchain import Blockchain
+from Message import Message
+from NodeAPI import NodeAPI
 from SocketCommunication import SocketCommunication
 from TransactionPool import TransactionPool
-from Wallet import Wallet
-from NodeAPI import NodeAPI
-from Message import Message
 from Utils import Utils
-
+from Wallet import Wallet
 
 
 class Node:
@@ -40,3 +39,14 @@ class Node:
             message = Message(self.p2p.socketConnector, 'TRANSACTION', transaction)
             encodedMessage = Utils.encode(message)
             self.p2p.broadcast(encodedMessage)
+
+            if self.transactionPool.isForgerRequired():
+                self.forge()
+
+    # create a new block (PoS uses the terms forge, mint while PoW use the term mine)
+    def forge(self):
+        forger = self.blockchain.nextForger()
+        if forger == self.wallet.getPubKeyString():
+            print('I am the next forger')
+        else:
+            print('I am not the next forger')

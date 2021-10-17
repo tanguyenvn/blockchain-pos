@@ -20,8 +20,8 @@ def getRandomString(length):
     resultString = ''.join(random.choice(letters) for i in range(length))
     return resultString
 
-# the higher stake a candidate puts, the higher chance it can become a forger
 def testForger(aliceStake: int, bobStake: int):
+    # the higher stake a candidate puts, the higher chance it can become a forger
     pos = ProofOfStake()
     pos.update('alice', aliceStake)
     pos.update('bob', bobStake)
