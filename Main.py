@@ -151,7 +151,7 @@ def testP2PCommunication():
     if port == 10002:
         # this block of code is processing inside node 10002
         node.p2p.connect_with_node('localhost', 10001)
-    
+
 def testAPI():
     ip = sys.argv[1]
     p2pPort = int(sys.argv[2])
