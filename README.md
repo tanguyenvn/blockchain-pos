@@ -19,6 +19,12 @@ This is a prototype of Blockchain using Proof-of-Stake Consensus mechanism. It w
 - Shorten the addresses of sender and receiver. So far, we're using public keys
 - What if a staker is selected to be the next forger but is offline?
 
+## High level Components
+![High level Components](./assets/high_level_design.png?raw=true "High level Components")
+
+## UML Diagram
+![UML Diagram](./assets/uml_diagram.png?raw=true "UML Diagram")
+
 ## Getting started
 
 - Install requirements.txt
