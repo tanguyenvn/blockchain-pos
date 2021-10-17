@@ -1,4 +1,4 @@
-from Crypto import Signature
+import copy
 
 from Block import Block
 from Blockchain import Blockchain
@@ -50,6 +50,7 @@ class Node:
             if self.transactionPool.isForgerRequired():
                 self.forge()
 
+    # Handle block message sent from other peers
     def handleBlock(self, block: Block):
         isBlockCountValid = self.blockchain.blockCountValid(block)
         isLastBlockHashValid = self.blockchain.lastBlockHashValid(block)
@@ -60,6 +61,9 @@ class Node:
         signature = block.signature
         isSignatureValid = self.wallet.isSignatureValid(block.payload(), signature, forger)
 
+        if not isBlockCountValid:
+            self.requestChain()
+
         if isBlockCountValid and isLastBlockHashValid and isForgerValid and areTransactionsValid and isSignatureValid:
             # add to blockchain
             self.blockchain.addBlock(block)
@@ -69,7 +73,29 @@ class Node:
             message = Message(self.p2p.socketConnector, 'BLOCK', block)
             self.p2p.broadcast(Utils.encode(message))
 
-    # create a new block (PoS uses the terms forge, mint while PoW use the term mine)
+    # Request missing blocks sent from other peers
+    def requestChain(self):
+        message = Message(self.p2p.socketConnector, 'BLOCKCHAINREQUEST', None)
+        self.p2p.broadcast(Utils.encode(message))
+
+    # Handle blockchain request message sent from other peers
+    def handleBlockchainRequest(self, requestingNode):
+        message = Message(self.p2p.socketConnector, 'BLOCKCHAIN', self.blockchain)
+        self.p2p.send(requestingNode, Utils.encode(message))
+    
+    # Handle blockchain message sent from other peers
+    def handleBlockchain(self, blockchain):
+        localBlockchainCopy = copy.deepcopy(self.blockchain)
+        localBlockCount = len(localBlockchainCopy.blocks)
+        receivedBlockCount = len(blockchain.blocks)
+        if localBlockCount < receivedBlockCount:
+            for blockNumber, block in enumerate(blockchain.blocks):
+                if blockNumber >= localBlockCount:
+                    localBlockchainCopy.addBlock(block)
+                    self.transactionPool.removeFromPool(block.transactions)
+            self.blockchain = localBlockchainCopy
+
+    # Create a new block (PoS uses the terms forge, mint while PoW use the term mine)
     def forge(self):
         forger = self.blockchain.findNextForger()
         if forger == self.wallet.getPubKeyString():
